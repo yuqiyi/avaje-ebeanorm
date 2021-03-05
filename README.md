@@ -21,7 +21,7 @@
         </a>
       </td>
       <td align="center" valign="middle">
-        <a href="https://timerbe.de" target="_blank">
+        <a href="https://timerbee.de" target="_blank">
           <img width="222px" src="https://ebean.io/images/logo-timerbee.png">
         </a>
       </td>
@@ -44,4 +44,3 @@ Goto [https://ebean.io/docs/](https://ebean.io/docs/)
 ## Other versions
 * [![Maven Central : ebean-agent](https://maven-badges.herokuapp.com/maven-central/io.ebean/ebean-agent/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.ebean/ebean-agent) - ebean-agent
 * [![Maven Central : ebean-maven-plugin](https://maven-badges.herokuapp.com/maven-central/io.ebean/ebean-maven-plugin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.ebean/ebean-maven-plugin) - ebean-maven-plugin
-
