@@ -35,6 +35,8 @@ import io.ebean.plugin.BeanType;
 import io.ebeaninternal.api.BindParams;
 import io.ebeaninternal.api.CQueryPlanKey;
 import io.ebeaninternal.api.CacheIdLookup;
+import io.ebeaninternal.api.CacheIdLookupMany;
+import io.ebeaninternal.api.CacheIdLookupSingle;
 import io.ebeaninternal.api.HashQuery;
 import io.ebeaninternal.api.ManyWhereJoins;
 import io.ebeaninternal.api.NaturalKeyQueryData;
@@ -740,10 +742,14 @@ public class DefaultOrmQuery<T> implements SpiQuery<T> {
       return null;
     }
     List<SpiExpression> underlyingList = whereExpressions.getUnderlyingList();
-    if (underlyingList.size() == 1) {
+    if (underlyingList.isEmpty()) {
+      if (id != null) {
+        return new CacheIdLookupSingle<>(id);
+      }
+    } else if (underlyingList.size() == 1) {
       SpiExpression singleExpression = underlyingList.get(0);
       if (singleExpression instanceof IdInExpression) {
-        return new CacheIdLookup<>((IdInExpression) singleExpression);
+        return new CacheIdLookupMany<>((IdInExpression) singleExpression);
       }
     }
     return null;
@@ -1413,6 +1419,11 @@ public class DefaultOrmQuery<T> implements SpiQuery<T> {
   }
 
   @Override
+  public void addNested(String name, OrmQueryDetail nestedDetail, FetchConfig config) {
+    detail.addNested(name, nestedDetail, config);
+  }
+
+  @Override
   public Query<T> select(String columns) {
     detail.select(columns);
     return this;
@@ -1549,6 +1560,11 @@ public class DefaultOrmQuery<T> implements SpiQuery<T> {
   @Override
   public void findEach(Consumer<T> consumer) {
     server.findEach(this, consumer, transaction);
+  }
+
+  @Override
+  public void findEach(int batch, Consumer<List<T>> consumer) {
+    server.findEach(this, batch, consumer, transaction);
   }
 
   @Override

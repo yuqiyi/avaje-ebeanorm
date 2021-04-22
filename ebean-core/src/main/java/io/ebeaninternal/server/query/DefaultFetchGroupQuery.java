@@ -264,6 +264,11 @@ class DefaultFetchGroupQuery<T> implements SpiFetchGroupQuery<T>, SpiQueryFetch 
   }
 
   @Override
+  public void findEach(int batch, Consumer<List<T>> consumer) {
+    throw new RuntimeException("EB102: Only select() and fetch() clause is allowed on FetchGroup");
+  }
+
+  @Override
   public void findEachWhile(Predicate<T> consumer) {
     throw new RuntimeException("EB102: Only select() and fetch() clause is allowed on FetchGroup");
   }
@@ -638,5 +643,10 @@ class DefaultFetchGroupQuery<T> implements SpiFetchGroupQuery<T>, SpiQueryFetch 
   @Override
   public void fetchProperties(String property, Set<String> columns, FetchConfig config) {
     detail.fetchProperties(property, columns, config);
+  }
+
+  @Override
+  public void addNested(String name, OrmQueryDetail nestedDetail, FetchConfig config) {
+    detail.addNested(name, nestedDetail, config);
   }
 }

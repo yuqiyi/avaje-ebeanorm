@@ -173,8 +173,8 @@ public final class OrmQueryRequest<T> extends BeanRequest implements SpiOrmQuery
    * iteration is fine.
    * </p>
    */
-  public int getSecondaryQueriesMinBatchSize(int defaultQueryBatch) {
-    return loadContext.getSecondaryQueriesMinBatchSize(defaultQueryBatch);
+  public int getSecondaryQueriesMinBatchSize() {
+    return loadContext.getSecondaryQueriesMinBatchSize();
   }
 
   /**
@@ -426,6 +426,24 @@ public final class OrmQueryRequest<T> extends BeanRequest implements SpiOrmQuery
     try (QueryIterator<T> it = queryEngine.findIterate(this)) {
       while (it.hasNext()) {
         consumer.accept(it.next());
+      }
+    }
+  }
+
+  @Override
+  public void findEach(int batch, Consumer<List<T>> batchConsumer) {
+    final List<T> buffer = new ArrayList<>(batch);
+    try (QueryIterator<T> it = queryEngine.findIterate(this)) {
+      while (it.hasNext()) {
+        buffer.add(it.next());
+        if (buffer.size() >= batch) {
+          batchConsumer.accept(buffer);
+          buffer.clear();
+        }
+      }
+      if (!buffer.isEmpty()) {
+        // consume the remainder
+        batchConsumer.accept(buffer);
       }
     }
   }

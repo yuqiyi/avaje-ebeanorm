@@ -308,6 +308,13 @@ public interface ExpressionList<T> {
   void findEach(Consumer<T> consumer);
 
   /**
+   * Execute findEach with a batch consumer.
+   *
+   * @see Query#findEach(int, Consumer)
+   */
+  void findEach(int batch, Consumer<List<T>> consumer);
+
+  /**
    * Execute the query processing the beans one at a time with the ability to
    * stop processing before reading all the beans.
    *
@@ -1664,7 +1671,7 @@ public interface ExpressionList<T> {
   ExpressionList<T> endAnd();
 
   /**
-   * End a AND junction - synonym for endJunction().
+   * End a OR junction - synonym for endJunction().
    */
   ExpressionList<T> endOr();
 
